@@ -5,7 +5,7 @@ import ThemeProvider from "./theme-provider";
 import { wagmiConfig } from "./wagmi-config";
 
 import Navbar from "components/navbar/index";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider, lightTheme } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -23,7 +23,7 @@ export default function RootLayout({
         <WagmiConfig client={client}>
           <RainbowKitProvider
             chains={chains}
-            theme={darkTheme({
+            theme={lightTheme({
               accentColor: "#4F535C",
               accentColorForeground: "white",
               borderRadius: "small",

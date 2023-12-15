@@ -22,7 +22,7 @@
       "public/*": ["public/*"],
       "styles/*": ["src/styles/*"],
       "utils/*": ["utils/*"],
-      "config/*": ["config/*"]
+      "config": ["config"]
     },
     "incremental": true,
     "plugins": [

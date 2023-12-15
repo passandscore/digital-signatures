@@ -1,56 +1,85 @@
-"use client";
-
+import React from "react";
 import {
-  Center,
   Container,
   Table,
-  TableCaption,
   Tbody,
   Td,
   Tooltip,
   Tr,
   Text,
-  useClipboard,
+  useToast,
 } from "@chakra-ui/react";
+
+const trimAddress = (address: string) => {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};
 
 const VerificationOutput = ({
   verifiedMessage,
   connectedAddress,
   recoveredAddress,
+  isMobileTabletWidth,
 }: {
   verifiedMessage: string;
   connectedAddress: `0x${string}` | string;
   recoveredAddress: string;
+  isMobileTabletWidth: boolean;
 }) => {
-  const { onCopy: onCopyConnectedAddress } = useClipboard(
-    `0x${connectedAddress}` as string
-  );
-  const { onCopy: onCopyRecoveredAddress } = useClipboard(recoveredAddress);
+  const toast = useToast();
+
+  const copied = () => {
+    toast({
+      title: "Copied",
+      status: "success",
+      isClosable: true,
+      position: "bottom",
+    });
+  };
 
   return (
     <Container maxW={"container.lg"} px={5} mb={10}>
-      <Center fontSize="xl" fontWeight="bold" mt={2}>
+      <Text color="#4299E1" fontSize="lg" my={2} align="center">
         {verifiedMessage}
-      </Center>
+      </Text>
       <Table>
-        <TableCaption placement="top">Recovered Results</TableCaption>
         <Tbody>
           <Tr>
-            <Td>Connected Address:</Td>
+            <Td>{`${
+              isMobileTabletWidth ? "Connected" : "Connected Address:"
+            }`}</Td>
+
             <Td>
-              <Tooltip label={connectedAddress} hasArrow>
-                <Text onClick={onCopyConnectedAddress} cursor="pointer">
-                  {connectedAddress}
+              <Tooltip label="copy" hasArrow>
+                <Text
+                  onClick={() => {
+                    navigator.clipboard.writeText(connectedAddress);
+                    copied();
+                  }}
+                  cursor="pointer"
+                >
+                  {isMobileTabletWidth
+                    ? trimAddress(connectedAddress)
+                    : connectedAddress}
                 </Text>
               </Tooltip>
             </Td>
           </Tr>
           <Tr>
-            <Td>Recovered Address:</Td>
+            <Td>{`${
+              isMobileTabletWidth ? "Recovered" : "Recovered Address:"
+            }`}</Td>
             <Td>
-              <Tooltip label={recoveredAddress} hasArrow>
-                <Text onClick={onCopyRecoveredAddress} cursor="pointer">
-                  {recoveredAddress}
+              <Tooltip label="copy" hasArrow>
+                <Text
+                  onClick={() => {
+                    navigator.clipboard.writeText(recoveredAddress);
+                    copied();
+                  }}
+                  cursor="pointer"
+                >
+                  {isMobileTabletWidth
+                    ? trimAddress(recoveredAddress)
+                    : recoveredAddress}
                 </Text>
               </Tooltip>
             </Td>

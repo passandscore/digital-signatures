@@ -1,6 +1,9 @@
 import { Flex, Text, Button } from "@chakra-ui/react";
 
+import { useWindowSize } from "usehooks-ts";
+
 const Header = () => {
+  const { width } = useWindowSize();
   return (
     <>
       <Flex
@@ -13,7 +16,7 @@ const Header = () => {
         justify="space-between"
         align="center"
       >
-        <Text>Digital Signatures</Text>
+        <Text>{width < 450 ? "Signatures" : "Digital Signatures"}</Text>
         <Flex align="center">
           {/* Star Repo Button */}
           <Button

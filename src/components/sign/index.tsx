@@ -13,11 +13,14 @@ import React, { Fragment, useState } from "react";
 import { ethers } from "ethers";
 import { ExternalProvider } from "@ethersproject/providers";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useWindowSize } from "usehooks-ts";
+
 import SignatureOutput from "../output/signature";
 import VerificationOutput from "../output/verification";
 import MessageInput from "../inputs/message";
 import SignatureInput from "../inputs/signature";
+import { CustomConnectButton } from "../buttons/rainbow-connect";
+import { tabletBreakpoint } from "config";
 
 type DecodedSignature = {
   r: string;
@@ -41,11 +44,14 @@ const SignMessage: NextPage = () => {
 
   const account = useAccount();
   const toast = useToast();
+  const { width } = useWindowSize();
+
+  const isMobileTabletWidth = width < tabletBreakpoint;
 
   const notification = (message: string, type: string) => {
     toast[type](message, {
       theme: "colored",
-      position: "bottom-right",
+      position: "bottom",
       closeOnClick: true,
       pauseOnHover: true,
     });
@@ -59,7 +65,7 @@ const SignMessage: NextPage = () => {
         title: "Please connect your wallet",
         status: "error",
         isClosable: true,
-        position: "top",
+        position: "bottom",
       });
       return;
     }
@@ -69,7 +75,7 @@ const SignMessage: NextPage = () => {
         title: "Invalid message",
         status: "error",
         isClosable: true,
-        position: "top",
+        position: "bottom",
       });
       return;
     }
@@ -104,7 +110,17 @@ const SignMessage: NextPage = () => {
           title: "Please connect your wallet",
           status: "error",
           isClosable: true,
-          position: "top",
+          position: "bottom",
+        });
+        return;
+      }
+
+      if (!signatureToVerify || !message) {
+        toast({
+          title: "Invalid signature or message",
+          status: "error",
+          isClosable: true,
+          position: "bottom",
         });
         return;
       }
@@ -117,33 +133,24 @@ const SignMessage: NextPage = () => {
         setSignerAddress(signerAddr);
 
         if (signerAddr !== account?.address) {
-          setVerifiedMessage("❌ You are not the signer of this message");
+          setVerifiedMessage("You are not the signer");
         } else {
-          setVerifiedMessage("🎉 You are the signer of this message");
+          setVerifiedMessage("You are the signer");
         }
       } else {
-        setVerifiedMessage("❌ Please connect your wallet to verify message");
+        setVerifiedMessage("Connect your wallet");
       }
 
       setIsVerified(true);
     } catch (err) {
       console.log(err);
 
-      if (!signatureToVerify || !message) {
-        toast({
-          title: "Invalid signature or message",
-          status: "error",
-          isClosable: true,
-          position: "top",
-        });
-      }
-
       if (err.message.includes("signature missing")) {
         toast({
           title: "Invalid signature",
           status: "error",
           isClosable: true,
-          position: "top",
+          position: "bottom",
         });
       }
 
@@ -161,14 +168,15 @@ const SignMessage: NextPage = () => {
 
   return (
     <Fragment>
-      <Container mt={5} mb={10} maxW="87%">
+      <Container mt={5} mb={10} maxW={isMobileTabletWidth ? "100%" : "89%"}>
         <Flex justify="space-between">
-          <ConnectButton />
+          <CustomConnectButton isMobileTabletWidth={isMobileTabletWidth} />
           <HStack spacing={5}>
             <Text>Sign</Text>
 
             <Switch
-              size="lg"
+              size="md"
+              colorScheme="whiteAlpha"
               onChange={() => {
                 clearState();
                 setMode(mode === "sign" ? "verify" : "sign");
@@ -219,6 +227,7 @@ const SignMessage: NextPage = () => {
         <SignatureOutput
           signature={signature}
           decodedSignature={decodedSignature}
+          isMobileTabletWidth={isMobileTabletWidth}
         />
       )}
 
@@ -227,6 +236,7 @@ const SignMessage: NextPage = () => {
           verifiedMessage={verifiedMessage}
           connectedAddress={account?.address || ""}
           recoveredAddress={signerAddress}
+          isMobileTabletWidth={isMobileTabletWidth}
         />
       )}
     </Fragment>

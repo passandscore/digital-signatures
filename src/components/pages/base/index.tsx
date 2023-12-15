@@ -1,16 +1,18 @@
 "use client";
 
-import { Box } from "@chakra-ui/react";
+import { Box, Center } from "@chakra-ui/react";
 
 import Header from "src/components/header";
 import SignMessage from "src/components/sign";
 
 const Page = () => {
   return (
-    <Box mt={10} px={5}>
-      <Header />
-      <SignMessage />
-    </Box>
+    <Center>
+      <Box mt={10} px={5} maxW="1300px" w="100%">
+        <Header />
+        <SignMessage />
+      </Box>
+    </Center>
   );
 };
 
