@@ -282,23 +282,6 @@ const SignMessage: NextPage = () => {
           recoveredAddress={signerAddress}
         />
       )}
-
-      {/* Footer */}
-      <Flex justify="center" mt={4} mb={4}>
-        <Text
-          as="a"
-          href="https://github.com/passandscore/digital-signatures"
-          target="_blank"
-          rel="noopener noreferrer"
-          fontSize="xs"
-          color="#9AA0A6"
-          fontWeight="400"
-          transition="color 0.15s"
-          _hover={{ color: "#5F6368", textDecoration: "none" }}
-        >
-          View on GitHub
-        </Text>
-      </Flex>
     </Fragment>
   );
 };
